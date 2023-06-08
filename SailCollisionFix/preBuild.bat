@@ -1,0 +1,2 @@
+if not exist "C:\Program Files (x86)\Steam\steamapps\common\Sailwind\Mods\SailCollisionFix\" mkdir "C:\Program Files (x86)\Steam\steamapps\common\Sailwind\Mods\SailCollisionFix"
+del /q "C:\Program Files (x86)\Steam\steamapps\common\Sailwind\Mods\SailCollisionFix\SailCollisionFix.dll"
