@@ -15,7 +15,7 @@ namespace SailCollisionFix
         public bool IgnoreSailsCollision = true;
 
         [XmlIgnore]
-        public bool IgnoreObstructed = true;
+        public bool IgnoreObstructed = false;
 
         [XmlIgnore]
         public bool IgnoreAngleLimits = false;

@@ -2,7 +2,7 @@
     "id": "SailCollisionFix",
     "DisplayName": "SailCollisionFix",
     "author": "NANDbrew",
-    "Version": "1.0.0",
+    "Version": "1.1.1",
     "ManagerVersion": "0.24.0.0",
     "AssemblyName": "SailCollisionFix.dll",
     "EntryMethod": "SailCollisionFix.Main.Load"
