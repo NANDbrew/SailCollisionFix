@@ -14,27 +14,51 @@ namespace SailCollisionFix
         [HarmonyPatch(typeof(ShipyardSailColChecker), "IsCollidingWithSail")]
         public static class SailCollisionPatch
         {   
-            [HarmonyPrefix]
-            private static void Prefix(ShipyardSailColChecker __instance)
+            [HarmonyPostfix]
+            private static void Postfix(ShipyardSailColChecker __instance)
             {
                 if (Main.enabled)
                 {
-                    __instance.collisionsWithSails = 0;
+                    if (Main.settings.IgnoreSailsCollision)
+                    {
+                        __instance.collisionsWithSails = 0;
+                    }
                 }
-                return;
             }
         }
         [HarmonyPatch(typeof(ShipyardSailColChecker), "IsObstructed")]
         public static class SailObstructionPatch
         {
-            [HarmonyPrefix]
-            private static void Prefix(ShipyardSailColChecker __instance)
+            [HarmonyPostfix]
+            private static void Postfix(ShipyardSailColChecker __instance)
             {
                 if (Main.enabled)
                 {
-                    __instance.collisionsWithOther = 0;
+                    if (Main.settings.IgnoreObstructed)
+                    {
+                        __instance.collisionsWithOther = 0;
+                    }
                 }
                 return;
+            }
+        }
+
+        [HarmonyPatch(typeof(ShipyardSailColChecker), "RunColCheck")]
+        public static class SailAnglesPatch
+        {
+            [HarmonyPrefix]
+            private static bool Prefix(ShipyardSailColChecker __instance)
+            {
+                if (Main.enabled)
+                {
+                    if (Main.settings.IgnoreAngleLimits)
+                    {
+                        __instance.colAngleMin = (float)__instance.startMinAngle;
+                        __instance.colAngleMax = (float)__instance.startMaxAngle;
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     }
