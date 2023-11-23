@@ -44,7 +44,7 @@ namespace SailCollisionFix
 
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Ignore Obstructions: ", GUILayout.ExpandWidth(false));
+            GUILayout.Label("Ignore obstructions: ", GUILayout.ExpandWidth(false));
             settings.IgnoreObstructed = GUILayout.Toggle(settings.IgnoreObstructed, "", GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 

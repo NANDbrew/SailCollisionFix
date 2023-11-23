@@ -14,8 +14,8 @@ namespace SailCollisionFix
         [HarmonyPatch(typeof(ShipyardSailColChecker), "IsCollidingWithSail")]
         public static class SailCollisionPatch
         {   
-            [HarmonyPostfix]
-            private static void Postfix(ShipyardSailColChecker __instance)
+            [HarmonyPrefix]
+            private static void Prefix(ShipyardSailColChecker __instance)
             {
                 if (Main.enabled)
                 {
@@ -39,15 +39,15 @@ namespace SailCollisionFix
                         __instance.collisionsWithOther = 0;
                     }
                 }
-                return;
+
             }
         }
 
-        [HarmonyPatch(typeof(ShipyardSailColChecker), "RunColCheck")]
+        [HarmonyPatch(typeof(ShipyardSailColChecker), "OnTriggerEnter")]
         public static class SailAnglesPatch
         {
-            [HarmonyPrefix]
-            private static bool Prefix(ShipyardSailColChecker __instance)
+            [HarmonyPostfix]
+            private static void Postfix(ShipyardSailColChecker __instance)
             {
                 if (Main.enabled)
                 {
@@ -55,10 +55,8 @@ namespace SailCollisionFix
                     {
                         __instance.colAngleMin = (float)__instance.startMinAngle;
                         __instance.colAngleMax = (float)__instance.startMaxAngle;
-                        return false;
                     }
                 }
-                return true;
             }
         }
     }
