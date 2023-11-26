@@ -7,56 +7,38 @@ using UnityEngine;
 using System.Reflection;
 
 namespace SailCollisionFix
-{
-
-    public static class Patches
+{  
+    [HarmonyPatch(typeof(ShipyardSailColChecker))]
+    static class Patches
     {
-        [HarmonyPatch(typeof(ShipyardSailColChecker), "IsCollidingWithSail")]
-        public static class SailCollisionPatch
-        {   
-            [HarmonyPrefix]
-            private static void Prefix(ShipyardSailColChecker __instance)
-            {
-                if (Main.enabled)
-                {
-                    if (Main.settings.IgnoreSailsCollision)
-                    {
-                        __instance.collisionsWithSails = 0;
-                    }
-                }
-            }
-        }
-        [HarmonyPatch(typeof(ShipyardSailColChecker), "IsObstructed")]
-        public static class SailObstructionPatch
+        [HarmonyPrefix]
+        [HarmonyPatch("IsCollidingWithSail")]
+        private static void SailsCollisionPatch(ShipyardSailColChecker __instance)
         {
-            [HarmonyPostfix]
-            private static void Postfix(ShipyardSailColChecker __instance)
+            if (Main.settings.IgnoreSailsCollision)
             {
-                if (Main.enabled)
-                {
-                    if (Main.settings.IgnoreObstructed)
-                    {
-                        __instance.collisionsWithOther = 0;
-                    }
-                }
-
+                __instance.collisionsWithSails = 0;
             }
         }
 
-        [HarmonyPatch(typeof(ShipyardSailColChecker), "OnTriggerEnter")]
-        public static class SailAnglesPatch
+        [HarmonyPostfix]
+        [HarmonyPatch("IsObstructed")]
+        private static void SailObstructionPatch(ShipyardSailColChecker __instance)
         {
-            [HarmonyPostfix]
-            private static void Postfix(ShipyardSailColChecker __instance)
+            if (Main.settings.IgnoreObstructed)
             {
-                if (Main.enabled)
-                {
-                    if (Main.settings.IgnoreAngleLimits)
-                    {
-                        __instance.colAngleMin = (float)__instance.startMinAngle;
-                        __instance.colAngleMax = (float)__instance.startMaxAngle;
-                    }
-                }
+                __instance.collisionsWithOther = 0;
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("OnTriggerEnter")]
+        private static void SailAnglesPatch(ShipyardSailColChecker __instance)
+        {
+            if (Main.settings.IgnoreAngleLimits)
+            {
+                __instance.colAngleMin = __instance.startMinAngle;
+                __instance.colAngleMax = __instance.startMaxAngle;
             }
         }
     }
