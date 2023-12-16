@@ -15,7 +15,7 @@ namespace SailCollisionFix
         [HarmonyPatch("IsCollidingWithSail")]
         private static void SailsCollisionPatch(ShipyardSailColChecker __instance)
         {
-            if (Main.settings.IgnoreSailsCollision)
+            if (Main.ignoreSailsCollision.Value)
             {
                 __instance.collisionsWithSails = 0;
             }
@@ -25,7 +25,7 @@ namespace SailCollisionFix
         [HarmonyPatch("IsObstructed")]
         private static void SailObstructionPatch(ShipyardSailColChecker __instance)
         {
-            if (Main.settings.IgnoreObstructed)
+            if (Main.ignoreObstructed.Value)
             {
                 __instance.collisionsWithOther = 0;
             }
@@ -35,7 +35,7 @@ namespace SailCollisionFix
         [HarmonyPatch("OnTriggerEnter")]
         private static void SailAnglesPatch(ShipyardSailColChecker __instance)
         {
-            if (Main.settings.IgnoreAngleLimits)
+            if (Main.ignoreAngleLimits.Value)
             {
                 __instance.colAngleMin = __instance.startMinAngle;
                 __instance.colAngleMax = __instance.startMaxAngle;

@@ -1,67 +1,39 @@
 using HarmonyLib;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 using UnityEngine;
-using UnityModManagerNet;
+using BepInEx;
+using BepInEx.Configuration;
+using BepInEx.Logging;
 
 namespace SailCollisionFix
 {
-    public class Main
+    [BepInPlugin(GUID, NAME, VERSION)]
+    internal class Main : BaseUnityPlugin
     {
-        public static bool Load(UnityModManager.ModEntry modEntry)
+        public const string GUID = "com.nandbrew.sailcollisionfix";
+        public const string NAME = "Sail Collision Fix";
+        public const string VERSION = "1.1.2";
+
+        internal static Main instance;
+
+        internal static ManualLogSource logSource;
+
+        internal static ConfigEntry<bool> ignoreSailsCollision;
+        internal static ConfigEntry<bool> ignoreObstructed;
+        internal static ConfigEntry<bool> ignoreAngleLimits;
+
+
+        private void Awake()
         {
-            new Harmony(modEntry.Info.Id).PatchAll(Assembly.GetExecutingAssembly());
+            instance = this;
+            logSource = Logger;
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), GUID);
 
-            mod = modEntry;
+            ignoreSailsCollision = Config.Bind("Options", "Ignore sail collision", true);
+            ignoreObstructed = Config.Bind("Options", "Ignore obstructions", false);
+            ignoreAngleLimits = Config.Bind("Options", "Ignore angle limits", false);
 
-            settings = SailCollisionFixSettings.Load<SailCollisionFixSettings>(modEntry);
-
-            modEntry.OnToggle = OnToggle;
-            modEntry.OnGUI = OnGUI;
-            modEntry.OnSaveGUI = OnSaveGUI;
-
-            return true;
         }
-
-        public static bool OnToggle(UnityModManager.ModEntry modEntry, bool value)
-        {
-            enabled = value;
-            return true;
-        }
-
-        public static void OnGUI(UnityModManager.ModEntry modEntry)
-        {        
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Ignore sail collisions: ", GUILayout.ExpandWidth(false));
-            settings.IgnoreSailsCollision = GUILayout.Toggle(settings.IgnoreSailsCollision, "", GUILayout.ExpandWidth(false));
-            GUILayout.EndHorizontal();
-
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Ignore obstructions: ", GUILayout.ExpandWidth(false));
-            settings.IgnoreObstructed = GUILayout.Toggle(settings.IgnoreObstructed, "", GUILayout.ExpandWidth(false));
-            GUILayout.EndHorizontal();
-
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Ignore angle limits: ", GUILayout.ExpandWidth(false));
-            settings.IgnoreAngleLimits = GUILayout.Toggle(settings.IgnoreAngleLimits, "", GUILayout.ExpandWidth(false));
-            GUILayout.EndHorizontal();
-        }
-
-        public static void OnSaveGUI(UnityModManager.ModEntry modEntry)
-        {
-            settings.Save(modEntry);
-        }
-
-        public static bool enabled;
-        public static UnityModManager.ModEntry mod;
-        public static SailCollisionFixSettings settings;
     }
 }
+
