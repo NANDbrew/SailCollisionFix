@@ -11,23 +11,23 @@ namespace SailCollisionFix
     [HarmonyPatch(typeof(ShipyardSailColChecker))]
     static class Patches
     {
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch("IsCollidingWithSail")]
-        private static void SailsCollisionPatch(ShipyardSailColChecker __instance)
+        private static void SailsCollisionPatch(ref bool __result)
         {
             if (Main.ignoreSailsCollision.Value)
             {
-                __instance.collisionsWithSails = 0;
+                __result = false;
             }
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("IsObstructed")]
-        private static void SailObstructionPatch(ShipyardSailColChecker __instance)
+        private static void SailObstructionPatch(ref bool __result)
         {
             if (Main.ignoreObstructed.Value)
             {
-                __instance.collisionsWithOther = 0;
+                __result = false;
             }
         }
 
@@ -41,5 +41,17 @@ namespace SailCollisionFix
                 __instance.colAngleMax = __instance.startMaxAngle;
             }
         }
+
+#if DEBUG
+        [HarmonyPrefix]
+        [HarmonyPatch("OnTriggerEnter")]
+        private static bool EverythingPatch()
+        {
+            if (Main.ignoreAll.Value) return false;
+
+            return true;
+        }
+#endif
+
     }
 }
