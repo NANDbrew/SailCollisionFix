@@ -1,9 +1,13 @@
 # Sail Collision Fix
+**Configurable options to bypass shipyard limits**
 
-## Description
+## Options
+- Ignore sail collisions. (on by default)
+  - Bypass the (SAILS COLLISION) warning. *this might be cheating*
+- Ignore obstructions. (off by default)
+  - Bypass the (OBSTRUCTED) warning. *this is probably cheating*
+- Ignore sail angle limits. (off by default)
+  - Allow all sails to rotate the full -89/89. *this is definitely cheating*
 
-Options to bypass limits
-
-- Ignore sail collisions.
-- Ignore obstructions.
-- Ignore sail angle limits.
+With all three options off, the mod does nothing.
+With all three options on, if the sail fits on the mast and doesn't overlap with another sail *on the same mast* it can be installed and rotate the full -89/89
